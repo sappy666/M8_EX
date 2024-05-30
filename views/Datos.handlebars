@@ -1,0 +1,95 @@
+<h1>Skate Park</h1>
+
+<div class="py-4">
+  <h2>Datos del perfil</h2>
+  <hr />
+
+  <div class="form-group row w-50 m-auto">
+    <div class="form-group col-12 col-sm-6">
+      <label>Email</label>
+      <input class="form-control m-auto" disabled value="{{data.email}}" />
+    </div>
+    <div class="form-group col-12 col-sm-6">
+      <label>Nombre</label>
+      <input id="nombreEdit" class="form-control m-auto" value="{{data.nombre}}" required type="text" size="25" />
+    </div>
+    <div class="form-group col-12 col-sm-6">
+      <label>Password</label>
+      <input id="password1" type="password" class="form-control m-auto" value="{{data.password}}" required size="25" />
+    </div>
+    <div class="form-group col-12 col-sm-6">
+      <label>Repita la password</label>
+      <input id="password2" type="password" class="form-control m-auto" value="{{data.password}}" required size="25" />
+    </div>
+    <div class="form-group col-12 col-sm-6">
+      <label>Años de experiencia</label>
+      <input id="anos_exp" class="form-control m-auto" value="{{data.anos_experiencia}}" required type="number" min="0"
+        max="60" />
+    </div>
+    <div class="form-group col-12 col-sm-6">
+      <label>Especialidad</label>
+      <input id="especialidad" class="form-control m-auto" value="{{data.especialidad}}" required type="text"
+        size="50" />
+    </div>
+  </div>
+  <div class="mb-1">
+    <button onclick="editarUsuario('{{data.id}}')" class="btn btn-primary">Actualizar</button>
+  </div>
+  <div>
+    <button onclick="eliminarUsuario('{{data.id}}')" class="btn btn-danger">Eliminar cuenta</button>
+  </div>
+</div>
+
+<script>
+  const editarUsuario = async (id) => {
+    const nombreEdit = document.getElementById('nombreEdit').value;
+    const password1 = document.getElementById('password1').value;
+    const password2 = document.getElementById('password2').value;
+    const anos_exp = document.getElementById('anos_exp').value;
+    const especialidad = document.getElementById('especialidad').value;
+
+    if (password1 != password2) {
+      return alert('Las contraseñas no coinciden!');
+    }
+
+    try {
+      const { data } = await axios.put(`/usuario?id=${id}`, { nombreEdit, password1, anos_exp, especialidad });
+      if (data.error) {
+        alert("Algo salió mal..." + data.error);
+      }
+      else {
+        alert(data.message);
+      }
+    }
+    catch (e) {
+      console.log("e : ", e);
+      alert("Algo salió mal..." + e);
+    }
+    finally {
+      window.location.replace("/");
+    }
+  };
+
+  const eliminarUsuario = async (id) => {
+    try {
+      const response = await fetch(`/usuario?id=${id}`, {
+        method: "DELETE",
+      });
+      const data = await response.json();
+
+      if (data.error) {
+        alert("Algo salió mal..." + data.error);
+      }
+      else {
+        alert(data.message);
+      }
+    }
+    catch (e) {
+      console.log("e : ", e);
+      alert("Algo salió mal..." + e);
+    }
+    finally {
+      window.location.replace("/");
+    }
+  };
+</script>

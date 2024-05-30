@@ -1,0 +1,42 @@
+<h1>Skate Park</h1>
+
+<div class="py-5">
+  <h2>Iniciar Sesión</h2>
+  <hr />
+
+  <div class="form-group">
+    <div class="form-group">
+      <label>Email</label>
+      <input id="email" class="form-control w-50 m-auto" required type="email" size="50" minlength="6"
+        pattern="^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$" />
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input id="password" type="password" required size="25" class="form-control w-50 m-auto" />
+    </div>
+  </div>
+  <button onclick="verificacion()" class="btn btn-success mb-3">Ingresar</button>
+  <p>¿Aún no tienes cuenta? <a href="/registro">Regístrate</a></p>
+
+</div>
+
+<script>
+  const verificacion = async () => {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const payload = { email, password };
+    try {
+      const { data: token } = await axios.post('/verify', payload);
+      // console.log("token : ", token);
+      alert('Autenticacion y autorizacion exitosa!');
+      window.location.href = `/datos?token=${token}`;
+    }
+    catch ({ response }) {
+      const { data } = response;
+      const { error } = data;
+      alert(error);
+      document.getElementById('email').value = "";
+      document.getElementById('password').value = "";
+    }
+  }
+</script>
